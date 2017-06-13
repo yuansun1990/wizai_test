@@ -6,6 +6,10 @@ security:
     providers:
         in_memory:
             memory: ~
+        our_db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -15,6 +19,10 @@ security:
 
         main:
             anonymous: ~
+            pattern:    ^/
+            http_basic: ~
+            provider: our_db_provider
+
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
