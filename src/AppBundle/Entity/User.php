@@ -6,13 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  
 /**
  * @ORM\Entity
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User implements UserInterface {
+class User implements UserInterface, \Serializable{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -46,6 +47,42 @@ class User implements UserInterface {
      * @ORM\Column(type="string", length=64)
      */
     private $password;
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+ 
+    public function __construct()
+    {
+        $this->isActive = true;
+        // may not be needed, see section on salt below
+        // 非必须，参考下文中的salt讲解
+        // $this->salt = md5(uniqid(null, true));
+    }
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            // 参考下文中的salt讲解
+            // $this->salt,
+        ));
+    }
+ 
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // 参考下文中的salt讲解
+            // $this->salt
+        ) = unserialize($serialized);
+    }
 
     /**
      * Get id
