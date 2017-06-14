@@ -184,7 +184,7 @@ class User implements UserInterface, \Serializable{
     }
  
     public function getRoles() {
-        return null;
+        return array('ROLE_USER');
     }
     
     public function eraseCredentials() { return null; }
