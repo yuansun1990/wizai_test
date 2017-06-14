@@ -56,7 +56,6 @@ class User implements UserInterface, \Serializable{
     {
         $this->isActive = true;
         // may not be needed, see section on salt below
-        // 非必须，参考下文中的salt讲解
         // $this->salt = md5(uniqid(null, true));
     }
     /** @see \Serializable::serialize() */
