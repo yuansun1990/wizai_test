@@ -18,6 +18,6 @@ class taskListController extends Controller{
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
-        return $this->render('taskList/taskList.html.twig');
+        return $this->render('taskList/taskList.html.twig', array('form' => $form->createView()));
     }
 }
