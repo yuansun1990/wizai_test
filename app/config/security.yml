@@ -24,6 +24,9 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_login_check
+                #target_path_parameter: redirect_url
+                always_use_default_target_path: true
+                default_target_path: /taskList
             provider: our_db_provider
 
             # activate different ways to authenticate

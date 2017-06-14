@@ -10,3 +10,7 @@ login:
         
 login_check:
     path: /login_check
+
+task_list:
+    path: /taskList
+    defaults: { _controller: showTaskAction}
