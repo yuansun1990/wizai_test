@@ -10,7 +10,17 @@ login:
         
 login_check:
     path: /login_check
+logout:
+    path: /logout
 
 task_list:
-    path: /taskList
-    defaults: { _controller: showTaskAction}
+    path: /taskList/showTask/{id}
+    defaults: { _controller: AppBundle:Task:showTask}
+
+add_task:
+    path: /taskList/addTask/{ref_id}
+    defaults: { _controller: AppBundle:Task:addTask}
+
+delete_task:
+    path: /taskList/deleteTask/{id}
+    defaults: { _controller: AppBundle:Task:deleteTask}

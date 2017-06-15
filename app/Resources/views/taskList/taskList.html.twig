@@ -1,8 +1,25 @@
-{# app/Resources/views/taskList/taskList.html.twig #}
+{% extends '::base.html.twig' %}
 
-{{ form_start(form) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.description) }}
-
-<button type="submit">Add</button>
-{{ form_end(form) }}
+{% block body %}
+    <h2 class="ui aligned header">Your tasks list</h2>
+    
+    <table class="ui blue table">
+        
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td> {{ loop.index }}</td>
+                <td><a href="/taskList/showTask/{{ task.id }}">Show Subtask</a></td>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td> <button onclick="location.href='/taskList/deleteTask/{{ task.id }}'">Delete</button></td>
+                <td> <button onclick="location.href='/taskList/addTask/{{ task.id }}'">Add Subtask</button></td>
+            </tr>
+            {% endfor %}
+           
+        </tbody>
+    </table>
+    <br>
+    <button onclick="location.href='/taskList/addTask/{{ id }}'">Add Task Here</button>
+    <button onclick="location.href='/taskList/showTask/{{ ref_id }}'">Go Up</button>
+{% endblock %}
