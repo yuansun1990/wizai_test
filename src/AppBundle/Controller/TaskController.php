@@ -13,25 +13,27 @@ class TaskController extends Controller {
      * @Route("/taskList/showTask/{id}", defaults={"id" = 0}, name="showTask")
      */
     public function showTaskAction($id) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+            return $this->redirectToRoute('login');
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userId = $user->getId();
 
         $em = $this->getDoctrine()
-                    ->getRepository('AppBundle:Task');
+                   ->getRepository('AppBundle:Task');
 
         $task = $em->find($id);
-        if($task) {
-             $ref_id = $task->getReferenceId();
-        } else
+        if ($task) {
+            $ref_id = $task->getReferenceId();
+            $title = $task->getTitle();
+        } else {
             $ref_id = 0;
-        
+            $title = 0;
+        }
 
-        $tasks = $em->findBy(array('userId' => $userId, 'referenceId' => $id));
+        $subtasks = $em->findBy(array('userId' => $userId, 'referenceId' => $id));
 
-        print $id;
-        print $ref_id;
-
-        return $this->render('taskList/taskList.html.twig', array('tasks' => $tasks, 'ref_id' => $ref_id, 'id' => $id));
+        return $this->render('taskList/taskList.html.twig', array('subtasks' => $subtasks, 'title' => $title, 'ref_id' => $ref_id, 'id' => $id));
     }
     /**
      * @Route("/taskList/addTask/{ref_id}", defaults={"ref_id" = 0}, name="addTask")
@@ -58,7 +60,7 @@ class TaskController extends Controller {
             $em->persist($task);
             $em->flush();
 
-            return $this->redirectToRoute('task_list', ['ref_id' => $ref_id]);
+            return $this->redirectToRoute('task_list', ['id' => $ref_id]);
         }
 
         return $this->render('taskList/addTask.html.twig', array('form' => $form->createView()));
@@ -76,10 +78,27 @@ class TaskController extends Controller {
         $userId = $user->getId();
 
         if ($task != null && $task->getUserId() == $userId) {
-            $em->remove($task);
-            $em->flush();   
+            $this->deleteTask($task);
         }
 
-        return $this->redirectToRoute('task_list', ['ref_id' => $ref_id]);
+        return $this->redirectToRoute('task_list', ['id' => $ref_id]);
+    }
+
+    private function deleteTask(Task $task) {
+        $em = $this->getDoctrine()->getManager();
+        $id = $task->getId();
+
+        $rp = $this->getDoctrine()
+                    ->getRepository('AppBundle:Task');
+
+        if ($task != null) {
+            $subtasks = $rp->findByReferenceId($id);
+            foreach ($subtasks as $subtask) {
+                $this->deleteTask($subtask);
+            }
+
+            $em->remove($task);
+            $em->flush();
+        }
     }
 }

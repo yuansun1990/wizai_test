@@ -1,25 +1,37 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-    <h2 class="ui aligned header">Your tasks list</h2>
-    
-    <table class="ui blue table">
+    <table class="ui blue table" border="1" cellspacing="0" bordercolor="#000000" width = "80%">
         
         <tbody>
-            {% for task in tasks %}
-            <tr>
-                <td> {{ loop.index }}</td>
-                <td><a href="/taskList/showTask/{{ task.id }}">Show Subtask</a></td>
-                <td>{{ task.title }}</td>
-                <td>{{ task.description }}</td>
-                <td> <button onclick="location.href='/taskList/deleteTask/{{ task.id }}'">Delete</button></td>
-                <td> <button onclick="location.href='/taskList/addTask/{{ task.id }}'">Add Subtask</button></td>
-            </tr>
-            {% endfor %}
-           
+         <tr>
+            <th></th>
+            <th></th>
+            <th>Title</th>
+            <th>Description</th>
+            <th colspan="2">Action</th>
+         </tr>
+         <button onclick="location.href='/logout'">Log Out</button>
+            {% if id== 0 %}
+                <h2>Your Task List</h2>
+            {% else %}
+                <h2>Subtasks of {{ title }}</h2>
+            {% endif %}    
+                {% for task in subtasks %}
+                     <tr>
+                        <td> {{ loop.index }}</td>
+                        <td><a href="/taskList/showTask/{{ task.id }}">Show Subtask</a></td>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.description }}</td>
+                        <td> <button onclick="location.href='/taskList/deleteTask/{{ task.id }}'">Delete</button></td>
+                        <td> <button onclick="location.href='/taskList/addTask/{{ task.id }}'">Add Subtask</button></td>
+                    </tr>
+                {% endfor %}   
         </tbody>
     </table>
     <br>
     <button onclick="location.href='/taskList/addTask/{{ id }}'">Add Task Here</button>
-    <button onclick="location.href='/taskList/showTask/{{ ref_id }}'">Go Up</button>
+    {% if id!= 0 %}
+        <button onclick="location.href='/taskList/showTask/{{ ref_id }}'">Return</button>
+    {% endif %}
 {% endblock %}
