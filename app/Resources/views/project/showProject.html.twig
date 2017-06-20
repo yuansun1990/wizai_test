@@ -1,0 +1,27 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <table class="ui blue table" border="1" cellspacing="0" bordercolor="#000000" width = "80%">
+        
+        <tbody>
+         <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Action</th>
+         </tr>
+
+                <h2>Your Project List</h2>
+   
+                {% for project in projects %}
+                     <tr>
+                        <td> {{ loop.index }}</td>
+                        <td><a href="/project/showProjectDetail/{{ project.id }}">{{ project.title }}</td>
+                        <td>{{ project.description }}</td>
+                    </tr>
+                {% endfor %} 
+        </tbody>
+    </table>
+    <br>
+    <button>Add Project Here</button>
+{% endblock %}

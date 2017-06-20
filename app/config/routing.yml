@@ -16,3 +16,11 @@ add_task:
 delete_task:
     path: /taskList/deleteTask/{id}
     defaults: { _controller: AppBundle:Task:deleteTask}
+
+show_project:
+    path: /projectList/showProject
+    defaults: { _controller: AppBundle:Project:showProject}
+
+show_project_detail:
+    path: /project/showProjectDetail/{id}
+    defaults: { _controller: AppBundle:Project:showProjectDetail}
